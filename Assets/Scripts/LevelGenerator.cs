@@ -21,6 +21,8 @@ public class LevelGenerator : MonoBehaviour {
 
 	public int mazeSize;
 
+	public int holes =0;
+
 	// spawns at the end of the maze generation
 	public GameObject pickup;
 
@@ -53,12 +55,26 @@ public class LevelGenerator : MonoBehaviour {
 						new Vector3(x, 1, z), Quaternion.identity
 					);
 
+					mapData[z, x] = true;
+
 					// flag as placed so we never consider placing again
 					characterPlaced = true;
 				}
 
 				// create floor and ceiling
-				CreateChildPrefab(floorPrefab, floorParent, x, 0, z);
+
+				if (Random.Range (1, 20)== 1 && holes<=4 && !(mapData[z, x]))//generate random holes
+				{
+					CreateChildPrefab (floorPrefab, floorParent, x, -2, z);// -2 height of hole
+					holes= holes+1;
+				}
+				
+				else 
+				{
+					CreateChildPrefab(floorPrefab, floorParent, x, 0, z);
+
+				}
+				
 
 				if (generateRoof) {
 					CreateChildPrefab(ceilingPrefab, wallsParent, x, 4, z);
