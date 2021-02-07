@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LevelGenerator : MonoBehaviour {
 
@@ -18,10 +19,11 @@ public class LevelGenerator : MonoBehaviour {
 
 	// number of times we want to "dig" in our maze
 	public int tilesToRemove = 50;
+	
+	// number of hole
+	public int holeNumber = 15;
 
 	public int mazeSize;
-
-	public int holes =0;
 
 	// spawns at the end of the maze generation
 	public GameObject pickup;
@@ -41,6 +43,7 @@ public class LevelGenerator : MonoBehaviour {
 		// initialize map 2D array
 		mapData = GenerateMazeData();
 
+		int holesCreated = 0;
 		// create actual maze blocks from maze boolean data
 		for (int z = 0; z < mazeSize; z++) {
 			for (int x = 0; x < mazeSize; x++) {
@@ -55,27 +58,22 @@ public class LevelGenerator : MonoBehaviour {
 						new Vector3(x, 1, z), Quaternion.identity
 					);
 
+					// set to true so holes don't generate on this
 					mapData[z, x] = true;
 
 					// flag as placed so we never consider placing again
 					characterPlaced = true;
 				}
 
-				// create floor and ceiling
-
-				if (Random.Range (1, 20)== 1 && holes<=4 && !(mapData[z, x]))//generate random holes
-				{
-					CreateChildPrefab (floorPrefab, floorParent, x, -2, z);// -2 height of hole
-					holes= holes+1;
-				}
-				
-				else 
-				{
+				// create floor 
+				if (holesCreated < holeNumber && Random.value < 0.1) {
+					// hole
+					holesCreated++;
+				} else {
 					CreateChildPrefab(floorPrefab, floorParent, x, 0, z);
-
 				}
 				
-
+				// create ceiling
 				if (generateRoof) {
 					CreateChildPrefab(ceilingPrefab, wallsParent, x, 4, z);
 				}

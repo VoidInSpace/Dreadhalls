@@ -12,11 +12,11 @@ public class DespawnOnHeight : MonoBehaviour {
     }
 
     void Update () {
-        if(characterController.transform.position.y < -10)
+        if(gameObject.transform.position.y < 0)
         {
             Destroy(GameObject.Find("WhisperSource"));
-            LevelCounter.level = 1;
-            SceneManager.LoadScene("End");
+            LevelTracker.presentLevel = 1;
+            SceneManager.LoadScene("GameOver");
         }
     }
 }
